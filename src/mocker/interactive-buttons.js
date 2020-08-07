@@ -16,14 +16,19 @@ nock(responseUrlBase)
 
 interactiveButtons.calls = []
 
+interactiveButtons.secret = ''
+
 interactiveButtons.send = function (target, data) {
+  const {headers, body} = sign(events.secret, data)
+
   data.response_url = `${responseUrlBase}/${++commandNumber}`
 
   // interactive-buttons use content-type application/x-www-form-urlencoded
   request({
     uri: target,
     method: 'POST',
-    form: data
+    headers,
+    form: body
   }, (err, res, body) => {
     if (err) {
       return logger.error(`error receiving response to interactive-buttons ${target}`, err)

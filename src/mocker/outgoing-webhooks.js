@@ -6,12 +6,17 @@ const logger = require('../lib/logger')
 
 outgoingWebhooks.calls = []
 
+outgoingWebhooks.secret = ''
+
 outgoingWebhooks.send = function (targetUrl, outgoingBody) {
+  const {headers, body} = sign(events.secret, outgoingBody)
+
   request({
     method: 'POST',
     uri: targetUrl,
     json: true,
-    body: outgoingBody
+    headers,
+    body
   }, (err, res, body) => {
     if (err) {
       return logger.error(`error receiving response to outgoing-webhooks ${targetUrl}`, err)

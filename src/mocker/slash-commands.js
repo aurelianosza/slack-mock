@@ -16,14 +16,19 @@ nock(responseUrlBase)
 
 slashCommands.calls = []
 
+slashCommands.secret = ''
+
 slashCommands.send = function (target, data) {
+  const {headers, body} = sign(events.secret, data)
+  
   data.response_url = `${responseUrlBase}/${++commandNumber}`
 
   // slash commands use content-type application/x-www-form-urlencoded
   request({
     uri: target,
     method: 'POST',
-    form: data
+    headers,
+    form: body
   }, (err, res, body) => {
     if (err) {
       return logger.error(`error receiving response to slash-commands ${target}`, err)

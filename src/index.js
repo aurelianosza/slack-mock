@@ -22,6 +22,11 @@ module.exports = function (config) {
     logger.level = config.logLevel
   }
 
+  events.secret = config.secret
+  interactiveButtons.secret = config.secret
+  outgoingWebhooks.secret = config.secret
+  slashCommands.secret = config.secret
+
   rtm._.init({rtmPort: config.rtmPort || 9001})
 
   logger.info('slack-mock running')
